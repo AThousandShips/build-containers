@@ -1,14 +1,20 @@
 ARG img_version
 FROM godot-fedora:${img_version}
 
-ENV OSX_SDK=15.5
+# Additional packages for Swift
+#
+# sudo dnf install gnupg2
+
+ENV XCODE_SDKV=26.0.1
+ENV APPLE_SDKV=26.0
+ENV OSX_SDK=26.0
 
 RUN dnf -y install --setopt=install_weak_deps=False \
       automake autoconf bzip2-devel cmake gawk gcc gcc-c++ libdispatch libicu-devel libtool \
-      libxml2-devel openssl-devel uuid-devel yasm && \
+      libxml2-devel openssl-devel uuid-devel yasm gpg && \
     git clone --progress https://github.com/tpoechtrager/osxcross && \
     cd /root/osxcross && \
-    git checkout 310196974007fc916f9be1877731b716a4854f72 && \
+    git checkout f873f534c6cdb0776e457af8c7513da1e02abe59 && \
     # Patch to fix visionOS support.
     # See: https://github.com/llvm/llvm-project/issues/142502
     patch -p1 < /root/files/patches/osxcross-fix-visionos.patch && \
@@ -25,5 +31,18 @@ RUN dnf -y install --setopt=install_weak_deps=False \
 
 ENV OSXCROSS_ROOT=/root/osxcross
 ENV PATH="/root/osxcross/target/bin:${PATH}"
+
+# Install Swift 6.2 toolchain
+
+RUN mkdir -p /root/Xcode.app/Contents/Developer
+RUN cd /root/Xcode.app/Contents/Developer && tar xf /root/files/Xcode-Developer${XCODE_SDKV}.tar.xz --strip-components=1
+
+RUN curl -O https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz && \
+    tar zxf swiftly-$(uname -m).tar.gz && \
+    ./swiftly init --platform ubi9 --quiet-shell-followup -y && \
+    . "${SWIFTLY_HOME_DIR:-$HOME/.local/share/swiftly}/env.sh" && \
+    hash -r
+
+RUN /root/files/swift/create-sdk-bundle.sh /root/Xcode.app/Contents/Developer /root/.swiftpm/swift-sdks
 
 CMD /bin/bash

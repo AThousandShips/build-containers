@@ -4,15 +4,14 @@ function check_toolchain
 {
     local platform=$1
     local sdk_prefix=$2
-    local sdk_version=$3
-    # if $4 is true, use the simulator SDK
-    if [ "$4" == "true" ]; then
-        SDK_DIR="/root/SDKs/${sdk_prefix}Simulator${sdk_version}.sdk"
-        TARGET_OS="${platform}${sdk_version}-simulator"
+    # if $3 is true, use the simulator SDK
+    if [ "$3" == "true" ]; then
+        SDK_DIR="/root/Xcode.app/Contents/Developer/Platforms/${sdk_prefix}Simulator.platform/Developer/SDKs/${sdk_prefix}Simulator.sdk"
+        TARGET_OS="${platform}${APPLE_SDKV}-simulator"
         NAME="${platform} (Simulator)"
     else
-        SDK_DIR="/root/SDKs/${sdk_prefix}OS${sdk_version}.sdk"
-        TARGET_OS="${platform}${sdk_version}"
+        SDK_DIR="/root/Xcode.app/Contents/Developer/Platforms/${sdk_prefix}OS.platform/Developer/SDKs/${sdk_prefix}OS.sdk"
+        TARGET_OS="${platform}${APPLE_SDKV}"
         NAME="${platform} (Device)"
     fi
 
@@ -27,11 +26,11 @@ function check_toolchain
     echo "${NAME} toolchain OK"
 }
 
-check_toolchain "ios" "iPhone" "$IOS_SDK" false
-check_toolchain "tvos" "AppleTV" "$TVOS_SDK" false
-check_toolchain "xros" "XR" "$XROS_SDK" false
+check_toolchain "ios" "iPhone" false
+check_toolchain "tvos" "AppleTV" false
+check_toolchain "xros" "XR" false
 # Check for simulator toolchains
-check_toolchain "ios" "iPhone" "$IOS_SDK" true
-check_toolchain "tvos" "AppleTV" "$TVOS_SDK" true
-check_toolchain "xros" "XR" "$XROS_SDK" true
+check_toolchain "ios" "iPhone" true
+check_toolchain "tvos" "AppleTV" true
+check_toolchain "xros" "XR" true
 

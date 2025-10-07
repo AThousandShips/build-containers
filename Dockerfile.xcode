@@ -9,6 +9,7 @@ RUN dnf -y install --setopt=install_weak_deps=False \
     clang -O3 -llzma -lxar -I /usr/local/include pbzx.c -o pbzx
 
 ENV XCODE_SDKV=
+ENV APPLE_SDKV=
 ENV OSX_SDKV=
 ENV IOS_SDKV=
 ENV TVOS_SDKV=
