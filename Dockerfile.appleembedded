@@ -4,20 +4,6 @@ FROM godot-osx:${img_version}
 RUN dnf -y install --setopt=install_weak_deps=False \
       automake autoconf gcc gcc-c++ gcc-objc gcc-objc++ cmake libicu-devel libtool libxml2-devel openssl-devel perl python yasm
 
-ENV IOS_SDK=18.5
-ENV TVOS_SDK=18.5
-ENV XROS_SDK=2.5
-
-# Extract the SDKs for iOS, tvOS and XROS, including the simulator SDKs
-# into separate layers, so this work is not repeated each time the image is built.
-RUN mkdir -p /root/SDKs
-RUN cd /root/SDKs && tar xf /root/files/iPhoneOS${IOS_SDK}.sdk.tar.xz
-RUN cd /root/SDKs && tar xf /root/files/iPhoneSimulator${IOS_SDK}.sdk.tar.xz
-RUN cd /root/SDKs && tar xf /root/files/AppleTVOS${TVOS_SDK}.sdk.tar.xz
-RUN cd /root/SDKs && tar xf /root/files/AppleTVSimulator${TVOS_SDK}.sdk.tar.xz
-RUN cd /root/SDKs && tar xf /root/files/XROS${XROS_SDK}.sdk.tar.xz
-RUN cd /root/SDKs && tar xf /root/files/XRSimulator${XROS_SDK}.sdk.tar.xz
-
 RUN git clone --depth 1 --no-checkout https://github.com/tpoechtrager/cctools-port.git && \
     cd /root/cctools-port && \
     git fetch --depth 1 origin 7224fd5c9390ea15cff6ee69ff92ea677b40014b && \
