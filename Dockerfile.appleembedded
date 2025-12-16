@@ -6,8 +6,8 @@ RUN dnf -y install --setopt=install_weak_deps=False \
 
 RUN git clone --depth 1 --no-checkout https://github.com/tpoechtrager/cctools-port.git && \
     cd /root/cctools-port && \
-    git fetch --depth 1 origin 7224fd5c9390ea15cff6ee69ff92ea677b40014b && \
-    git checkout 7224fd5c9390ea15cff6ee69ff92ea677b40014b
+    git fetch --depth 1 origin 1cce4a06877992f708b2e0e2ab217a0cfb923a4f && \
+    git checkout 1cce4a06877992f708b2e0e2ab217a0cfb923a4f
 
 COPY files/appleembedded/build.sh /root/cctools-port/usage_examples/ios_toolchain/build.sh
 COPY files/appleembedded/wrapper.c /root/cctools-port/usage_examples/ios_toolchain/wrapper.c

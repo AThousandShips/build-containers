@@ -10,12 +10,5 @@ RUN dnf -y install --setopt=install_weak_deps=False \
 
 ENV XCODE_SDKV=
 ENV APPLE_SDKV=
-ENV OSX_SDKV=
-ENV IOS_SDKV=
-ENV TVOS_SDKV=
-ENV VISIONOS_SDKV=
 
-COPY extract_xcode_sdks.sh /root/extract_xcode_sdks.sh
-RUN chmod +x /root/extract_xcode_sdks.sh
-
-CMD /root/extract_xcode_sdks.sh
+CMD /root/files/extract_xcode_sdks.sh
